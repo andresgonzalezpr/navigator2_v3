@@ -1,87 +1,131 @@
+/*
+andres gonzalez
+* SENA
+* Ficha:2470980
+*
+* */
+//el paquete flutter nos importa el framework de flutter
 import 'package:flutter/material.dart';
 
 import 'lista_productos.dart';
 
-class Carrito extends StatefulWidget {
+//este Widget nos permite lectura y escritura
+class Cart extends StatefulWidget {
+  // definimos el array en la variable cart
   final List<ListaProductos> _cart;
 
-  const Carrito(this._cart, {super.key});
+  const Cart(this._cart, {super.key});
 
   @override
-  _CarritoState createState() => _CarritoState(this._cart);
+  _CartState createState() => _CartState(this._cart);
 }
 
-class _CarritoState extends State<Carrito> {
-  _CarritoState(this._cart);
+class _CartState extends State<Cart> {
+  _CartState(this._cart);
 
   List<ListaProductos> _cart;
 
   @override
   Widget build(BuildContext context) {
+    //este widget nos ayuda a darle un mejor diseño a nuestra hoja
     return Scaffold(
+      //creamos un header con un texto y icono para devolverce  a la hoja anterior
       appBar: AppBar(
-        title: const Text("Lista del carrito"),
+        backgroundColor: Colors.purple,
+        title: const Text(
+          'Detalle',
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black),
+        ),
+        centerTitle: true,
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-              setState(() {
-                _cart.length;
-              });
-            }),
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+            setState(() {
+              _cart.length;
+            });
+          },
+          color: Colors.white,
+        ),
       ),
-      body: ListView.builder(
-          itemCount: _cart.length,
-          itemBuilder: (context, index) {
-            return Card(
-              elevation: 5,
-              margin: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              child: Container(
-                padding: EdgeInsets.all(8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      child: Image(
-                        image: NetworkImage(
-                          _cart[index].imageURL.toString(),
-                        ),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        padding: EdgeInsets.only(bottom: 8),
+      body: GestureDetector(
+          child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    //nos ayuda a que solo ocupe el espacio que necesita
+                    shrinkWrap: true,
+                    //Nos ayuda a que el usuario no haga scroll
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _cart.length,
+                    itemBuilder: (context, index) {
+                      //hacemos una carta
+                      return Card(
+                        // la separamos 5px una de la otra
+                        elevation: 5,
+                        //les creamos una margen
+                        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+                        //realizamos una culumna para mantener la imagen el nombre y el precio
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(left: 8, right: 8),
-                              child: Text(
-                                _cart[index].nombre.toString(),
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                          children: <Widget>[
+                            //creamos una fila
+                            Row(
+                              //centramos los elementos
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              //colocamos la imagen
+                              children: [
+                                Container(
+                                  width: 70,
+                                  height: 70,
+                                  child: Image(
+                                    image:
+                                    NetworkImage(_cart[index].imageURL.toString()),
+                                    //nos ayuda a alinear y darle ajuste a la imagen
+                                    fit: BoxFit.fill,
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8, right: 8),
-                              child: Text(_cart[index].precio.toString()),
-                            ),
+                                //expandimos el row
+                                Expanded(
+                                    child: Container(
+                                      //le damos una distancia de 8px
+                                      padding: EdgeInsets.only(bottom: 8),
+                                      child: Column(
+                                        //centramos
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          // colocamos el nombre le damos una negrilla y tamaño de letra
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 8, right: 8),
+                                            child: Center(
+                                              child: Text(
+                                                _cart[index].nombre.toString(),
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )),
+                                //SizeBox vacío entre los dos widgets para obtener algo de espacio en el medio
+                                const SizedBox(
+                                  height: 38.0,
+                                ),
+                              ],
+                            )
                           ],
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }),
+                      );
+                    },
+                  ),
+                ],
+              ))),
     );
   }
 }
